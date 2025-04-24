@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Estoque Atual</h2>
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Quantidade Disponível</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prod in produtos %}
+        <tr>
+            <td>{{ prod.product_name }}</td>
+            <td>{{ prod.category }}</td>
+            <td>{{ prod.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

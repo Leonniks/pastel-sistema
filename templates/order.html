@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Registrar Pedido</h2>
+  <form method="post" action="{{ url_for('order') }}">
+    <!-- Nome e takeaway -->
+    <label for="customer_name">Nome:</label>
+    <input type="text" id="customer_name" name="customer_name" required>
+    <br><br>
+    <label>Para levar?</label>
+    <label><input type="radio" name="takeaway" value="Sim" checked> Sim</label>
+    <label><input type="radio" name="takeaway" value="Não"> Não</label>
+    <br><br>
+
+    <!-- Tabela de itens -->
+    <h3>Itens do Pedido:</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Preço unit.</th>
+          <th>Quantidade a vender</th>
+          <th>Quantidade disponível</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prod in produtos %}
+        <tr>
+          <td>{{ prod.product_name }}</td>
+          <td>R$ {{ "%.2f"|format(prod.price) }}</td>
+          <td><input type="number" name="produto_{{ prod.id }}" value="0" min="0"></td>
+          <td>{{ prod.quantity }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Total fora da tabela -->
+    <p><strong>Total do pedido:</strong> R$ <span id="total_value">0.00</span></p>
+
+    <button type="submit">Registrar Pedido</button>
+  </form>
+
+  <!-- Script para recalcular total em tempo real -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const prices = {
+        {% for prod in produtos %}
+        'produto_{{ prod.id }}': {{ prod.price }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+      };
+      const inputs = document.querySelectorAll('input[name^="produto_"]');
+      const totalEl = document.getElementById('total_value');
+
+      function updateTotal() {
+        let total = 0;
+        inputs.forEach(input => {
+          const qty = parseInt(input.value) || 0;
+          total += qty * prices[input.name];
+        });
+        totalEl.textContent = total.toFixed(2);
+      }
+
+      inputs.forEach(i => i.addEventListener('input', updateTotal));
+      updateTotal();
+    });
+  </script>
+{% endblock %}
