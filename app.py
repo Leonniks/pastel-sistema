@@ -8,7 +8,7 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta')
 
-WHATSAPP_NUMBER = os.getenv('WHATSAPP_NUMBER', '5511999998888')
+WHATSAPP_NUMBER = os.getenv('WHATSAPP_NUMBER', '62993646569')
 
 def get_db_connection():
     DATABASE_URL = os.getenv('DATABASE_URL',
